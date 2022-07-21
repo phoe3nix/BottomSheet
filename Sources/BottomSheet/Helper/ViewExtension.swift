@@ -23,6 +23,8 @@ public extension View {
     func bottomSheet<HContent: View,
                      MContent: View,
                      BottomSheetPositionEnum: RawRepresentable>(bottomSheetPosition: Binding<BottomSheetPositionEnum>,
+																bottomSheetHeight: Binding<Double> = .constant(0),
+																translation: Binding<CGFloat> = .constant(0),
                                                                 options: [BottomSheet.Options] =  [],
                                                                 @ViewBuilder headerContent: () -> HContent? = { return nil },
                                                                 @ViewBuilder mainContent: () -> MContent) -> some View
@@ -32,6 +34,8 @@ public extension View {
               ZStack {
                   self
                   BottomSheetView(bottomSheetPosition: bottomSheetPosition,
+								  bottomSheetHeight: bottomSheetHeight,
+								  translation: translation,
                                   options: options,
                                   headerContent: headerContent,
                                   mainContent: mainContent)
@@ -52,6 +56,8 @@ public extension View {
      */
     func bottomSheet<MContent: View,
                      BottomSheetPositionEnum: RawRepresentable>(bottomSheetPosition: Binding<BottomSheetPositionEnum>,
+																bottomSheetHeight: Binding<Double> = .constant(0),
+																translation: Binding<CGFloat> = .constant(0),
                                                                 options: [BottomSheet.Options] = [],
                                                                 title: String? = nil,
                                                                 @ViewBuilder content: () -> MContent) -> some View
@@ -60,7 +66,8 @@ public extension View {
           BottomSheetPositionEnum: Equatable {
               ZStack {
                   self
-                  BottomSheetView(bottomSheetPosition: bottomSheetPosition,
+				  BottomSheetView(bottomSheetPosition: bottomSheetPosition,
+								  bottomSheetHeight: bottomSheetHeight,
                                   options: options,
                                   title: title,
                                   content: content)
