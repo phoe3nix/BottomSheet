@@ -61,142 +61,146 @@ where BottomSheetPositionEnum.RawValue == CGFloat,
 					.transition(.opacity)
 			}
 
-			VStack(spacing: 0) {
+			ZStack(alignment: .top) {
+				headerContent?.zIndex(10)
 
-				// Drag indicator
-				if !self.options.notResizeable && !self.options.noDragIndicator {
-					Button(action: self.switchPositionIndicator, label: {
-						Capsule()
-							.fill(self.options.dragIndicatorColor)
-							.frame(width: 36, height: 5)
-							.padding(.top, 5)
-							.padding(.bottom, 7)
-							.gesture(
-								DragGesture()
-									.onChanged { value in
-										self.translation = value.translation.height
-										self.endEditing()
-									}
-									.onEnded { value in
-										let height: CGFloat = value.translation.height / geometry.size.height
-										self.switchPosition(with: height)
-									}
-							)
-					})
-				}
+				VStack(spacing: 0) {
 
-				headerContent
-
-				// Header
-//                if self.headerContent != nil || self.options.showCloseButton {
-//                    HStack(alignment: .top, spacing: 0) {
-//                        // Header content
-//                        if let headerContent = self.headerContent {
-//                            headerContent
-//                        }
-//
-//                        Spacer(minLength: 0)
-//
-//                        // Close button
-//                        if self.options.showCloseButton {
-//                            Button(action: self.closeButton) {
-//                                Image(systemName: "xmark.circle.fill")
-//                                    .foregroundColor(Color(UIColor.tertiaryLabel))
-//                            }
-//                            .font(.title)
-//                        }
-//                    }
-//                    .gesture(
-//                        DragGesture()
-//                            .onChanged { value in
-//                                if !self.options.notResizeable {
-//                                    self.translation = value.translation.height
-//                                    self.endEditing()
-//                                }
-//                            }
-//                            .onEnded { value in
-//                                if !self.options.notResizeable {
-//                                    let height: CGFloat = value.translation.height / geometry.size.height
-//                                    self.switchPosition(with: height)
-//                                }
-//                            }
-//                    )
-//                    .padding(.horizontal)
-//                    .padding(.top, self.options.notResizeable || self.options.noDragIndicator ? 20 : 0)
-//                    .padding(.bottom, self.headerContentPadding(geometry: geometry))
-//                }
-
-				// Content
-				Group {
-					if !self.isBottomPosition {
-						Group {
-							if self.options.appleScrollBehavior && !self.options.notResizeable {
-								// Content for .appleScrollBehavior
-								UIScrollViewWrapper(isScrollEnabled: self.$isScrollEnabled,
-													dragState: self.$dragState) {
-									self.mainContent
-								}
+					// Drag indicator
+					if !self.options.notResizeable && !self.options.noDragIndicator {
+						Button(action: self.switchPositionIndicator, label: {
+							Capsule()
+								.fill(self.options.dragIndicatorColor)
+								.frame(width: 36, height: 5)
+								.padding(.top, 5)
+								.padding(.bottom, 7)
 								.gesture(
-									self.isScrollEnabled ? nil :
-										DragGesture()
+									DragGesture()
 										.onChanged { value in
-											if self.isTopPosition && value.translation.height < 0 {
-												self.dragState = .changed(value: value)
-												self.translation = 0
-											} else {
-												self.dragState = .none
-												self.translation = value.translation.height
-											}
+											self.translation = value.translation.height
 											self.endEditing()
 										}
 										.onEnded { value in
-											if value.translation.height < 0 && self.isTopPosition {
-												self.dragState = .ended(value: value)
-												self.translation = 0
-												self.isScrollEnabled = true
-											} else {
-												self.dragState = .none
-												let height: CGFloat = value.translation.height / geometry.size.height
-												self.switchPosition(with: height)
-											}
+											let height: CGFloat = value.translation.height / geometry.size.height
+											self.switchPosition(with: height)
 										}
 								)
-							} else if self.options.allowContentDrag && !self.options.notResizeable {
-								// Content for .allowContentDrag
-								self.mainContent
-									.gesture(
-										DragGesture()
-											.onChanged { value in
-												self.translation = value.translation.height
-												self.dragState = .changed(value: value)
-												self.endEditing()
-											}
-											.onEnded { value in
-												let height: CGFloat = value.translation.height / geometry.size.height
-												self.switchPosition(with: height)
-												self.dragState = .ended(value: value)
-											}
-									)
-							} else {
-								// Default content
-								self.mainContent
-							}
-						}
-						.transition(.move(edge: .bottom))
-						.padding(.bottom,
-								 self.options.disableBottomSafeAreaInsets ? nil : geometry.safeAreaInsets.bottom)
-					} else {
-						Color.clear
+						})
 					}
-				}
-				.frame(maxWidth: .infinity, maxHeight: .infinity)
 
+					headerContent
+
+					// Header
+					//                if self.headerContent != nil || self.options.showCloseButton {
+					//                    HStack(alignment: .top, spacing: 0) {
+					//                        // Header content
+					//                        if let headerContent = self.headerContent {
+					//                            headerContent
+					//                        }
+					//
+					//                        Spacer(minLength: 0)
+					//
+					//                        // Close button
+					//                        if self.options.showCloseButton {
+					//                            Button(action: self.closeButton) {
+					//                                Image(systemName: "xmark.circle.fill")
+					//                                    .foregroundColor(Color(UIColor.tertiaryLabel))
+					//                            }
+					//                            .font(.title)
+					//                        }
+					//                    }
+					//                    .gesture(
+					//                        DragGesture()
+					//                            .onChanged { value in
+					//                                if !self.options.notResizeable {
+					//                                    self.translation = value.translation.height
+					//                                    self.endEditing()
+					//                                }
+					//                            }
+					//                            .onEnded { value in
+					//                                if !self.options.notResizeable {
+					//                                    let height: CGFloat = value.translation.height / geometry.size.height
+					//                                    self.switchPosition(with: height)
+					//                                }
+					//                            }
+					//                    )
+					//                    .padding(.horizontal)
+					//                    .padding(.top, self.options.notResizeable || self.options.noDragIndicator ? 20 : 0)
+					//                    .padding(.bottom, self.headerContentPadding(geometry: geometry))
+					//                }
+
+					// Content
+					Group {
+						if !self.isBottomPosition {
+							Group {
+								if self.options.appleScrollBehavior && !self.options.notResizeable {
+									// Content for .appleScrollBehavior
+									UIScrollViewWrapper(isScrollEnabled: self.$isScrollEnabled,
+														dragState: self.$dragState) {
+										self.mainContent
+									}
+														.gesture(
+															self.isScrollEnabled ? nil :
+																DragGesture()
+																.onChanged { value in
+																	if self.isTopPosition && value.translation.height < 0 {
+																		self.dragState = .changed(value: value)
+																		self.translation = 0
+																	} else {
+																		self.dragState = .none
+																		self.translation = value.translation.height
+																	}
+																	self.endEditing()
+																}
+																.onEnded { value in
+																	if value.translation.height < 0 && self.isTopPosition {
+																		self.dragState = .ended(value: value)
+																		self.translation = 0
+																		self.isScrollEnabled = true
+																	} else {
+																		self.dragState = .none
+																		let height: CGFloat = value.translation.height / geometry.size.height
+																		self.switchPosition(with: height)
+																	}
+																}
+														)
+								} else if self.options.allowContentDrag && !self.options.notResizeable {
+									// Content for .allowContentDrag
+									self.mainContent
+										.gesture(
+											DragGesture()
+												.onChanged { value in
+													self.translation = value.translation.height
+													self.dragState = .changed(value: value)
+													self.endEditing()
+												}
+												.onEnded { value in
+													let height: CGFloat = value.translation.height / geometry.size.height
+													self.switchPosition(with: height)
+													self.dragState = .ended(value: value)
+												}
+										)
+								} else {
+									// Default content
+									self.mainContent
+								}
+							}
+							.transition(.move(edge: .bottom))
+							.padding(.bottom,
+									 self.options.disableBottomSafeAreaInsets ? nil : geometry.safeAreaInsets.bottom)
+						} else {
+							Color.clear
+						}
+					}
+					.frame(maxWidth: .infinity, maxHeight: .infinity)
+
+				}
 			}
 			.edgesIgnoringSafeArea(.bottom)
 			.background(
 				// Sheet background
 				self.options.background
-					.cornerRadius(self.options.cornerRadius, corners: [.topRight, .topLeft])
+					.clipShape(RoundedRectangle(cornerRadius: self.options.cornerRadius, style: .continuous))
 					.edgesIgnoringSafeArea(.bottom)
 					.shadow(color: self.options.shadowColor,
 							radius: self.options.shadowRadius,

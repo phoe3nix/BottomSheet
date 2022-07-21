@@ -22,13 +22,13 @@ private struct RoundedCorner: Shape {
 
 internal extension View {
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape( RoundedCorner(radius: radius, corners: corners) )
+		clipShape(RoundedRectangle(cornerRadius: radius, style: .circular))
     }
 }
 
 struct RoundedCorner_Previews: PreviewProvider {
     static var previews: some View {
         Rectangle()
-            .cornerRadius(20, corners: [.topLeft, .topRight])
+            .cornerRadius(32, corners: [.topLeft, .topRight])
     }
 }
