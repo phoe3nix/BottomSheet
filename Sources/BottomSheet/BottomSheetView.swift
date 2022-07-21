@@ -88,8 +88,6 @@ where BottomSheetPositionEnum.RawValue == CGFloat,
 						})
 					}
 
-					headerContent
-
 					// Header
 					//                if self.headerContent != nil || self.options.showCloseButton {
 					//                    HStack(alignment: .top, spacing: 0) {
