@@ -269,11 +269,20 @@ where BottomSheetPositionEnum.RawValue == CGFloat,
 				geometry.size.height * 1.05
 			)
 
-			if height == bottomSheetHeight {
+			if options.absolutePositionValue {
+				if height == bottomSheetHeight {
+					return height
+				}
+				bottomSheetHeight = height
+				return height
+			} else {
+				let fractionHeight = height/geometry.size.height
+				if fractionHeight == bottomSheetHeight {
+					return height
+				}
+				bottomSheetHeight = fractionHeight
 				return height
 			}
-			bottomSheetHeight = height
-			return height
 		} else {
 			let height = min(
 				max(
@@ -282,11 +291,21 @@ where BottomSheetPositionEnum.RawValue == CGFloat,
 				),
 				geometry.size.height * 1.05
 			)
-			if height == bottomSheetHeight {
+
+			if options.absolutePositionValue {
+				if height == bottomSheetHeight {
+					return height
+				}
+				bottomSheetHeight = height
+				return height
+			} else {
+				let fractionHeight = height/geometry.size.height
+				if fractionHeight == bottomSheetHeight {
+					return height
+				}
+				bottomSheetHeight = fractionHeight
 				return height
 			}
-			bottomSheetHeight = height
-			return height
 		}
 	}
 
